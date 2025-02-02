@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import { apiLimiter } from "./middleware/rateLimiter.js";
+import { authLimiter } from "./middleware/rateLimiter.js";
 import authRoutes from "./routes/auth.js";
 import logger from "./utils/logger.js";
 import { scrapeBooks } from "./services/scraper.js";
@@ -18,7 +18,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("combined"));
-app.use(apiLimiter);
+
+// Rate Limiting for auth routes
+app.use("/api/auth", authLimiter);
 
 // Routes
 app.use("/api/auth", authRoutes);

@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 
 // Validation rules for /register
 export const registerValidationRules = [

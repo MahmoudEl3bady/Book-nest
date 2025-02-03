@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const JSON_WEB_TOKEN_SECRET = process.env.JWT_SECRET;
+const JSON_WEB_TOKEN_SECRET: string = process.env.JWT_SECRET || "";
 export function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];

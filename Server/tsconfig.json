@@ -1,7 +1,24 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ES2022", // Target ES2022 for modern JavaScript features
+    "module": "ESNext", // Use ESNext modules (supports dynamic imports)
+    "moduleResolution": "node", // Use Node.js module resolution
+    "outDir": "./dist", // Output compiled files to the `dist` directory
+    "rootDir": "./src", // Set root directory to `src` (not "./")
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enable ES module interop for CommonJS compatibility
+    "skipLibCheck": true, // Skip type-checking of library files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file name casing
+    "noUnusedLocals": true, // Report errors on unused local variables
+    "noUnusedParameters": true, // Report errors on unused function parameters
+    "noImplicitAny": false, // Allow implicit `any` types (set to `true` later for stricter checks)
+    "allowJs": true, // Allow JavaScript files during transition
+    "resolveJsonModule": true, // Allow importing JSON files
+    "baseUrl": "./", // Base directory for module resolution
+    "paths": {
+      "@/*": ["./src/*"] // Map `@/` to `src/` for easier imports
+    }
+  },
+  "include": ["src/**/*"], // Include all files in the `src` directory
+  "exclude": ["node_modules", "dist"] // Exclude `node_modules` and `dist` directories
 }

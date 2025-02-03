@@ -1,10 +1,10 @@
-import puppeteer from "puppeteer";
+import puppeteer, { Browser, Page } from "puppeteer";
 import logger from "../utils/logger.js";
-import prisma from "../../prismaClient.js";
+import prisma from "../config/prismaClient.js";
 
 export async function scrapeBooks(req, res) {
-  const browser = await puppeteer.launch({ headless: "new" });
-  const page = await browser.newPage();
+  const browser: Browser = await puppeteer.launch({ headless: "new" });
+  const page: Page = await browser.newPage();
 
   try {
     let currentPage = 1;

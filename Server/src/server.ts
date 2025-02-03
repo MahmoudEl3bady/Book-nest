@@ -29,17 +29,11 @@ app.use("/api/favorites", authenticateToken, favoriteRouter);
 app.get("/api/scrape-books", authenticateToken, scrapeBooks);
 
 // Auth Testing
-app.get("/api/test", authenticateToken, (req, res) => {
+app.get("/api/test", authenticateToken, (_, res) => {
   res.json({ message: "You are authenticated" });
 });
 
-// Error handling
-app.use((err, req, res, next) => {
-  logger.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
-});
-
-app.get("/healthz", (req, res) => {
+app.get("/healthz", (_, res) => {
   res.json({ message: "Welcome to the Book Scraper API" });
 });
 app.listen(PORT, () => {

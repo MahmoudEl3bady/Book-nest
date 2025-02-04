@@ -12,21 +12,42 @@ model User {
   name      String
   email     String   @unique
   password  String  
-  favorites Book[]   @relation("UserFavorites")
+  reviews   Review[]
+  favorites UserFavorite[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Book {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String     
+  rating      String
+  book_URL    String
+  image_url   String
+  reviews     Review[]
+  favorites   UserFavorite[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Review {
   id        Int      @id @default(autoincrement())
-  title     String
-  author    String?
-  price     Float
-  rating    String
-  book_URL       String
-  description String
-  image_url  String
-  users     User[]   @relation("UserFavorites")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  bookId    Int
+  comment      String
+  rating    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserFavorite {
+  user      User @relation(fields: [userId], references: [id])
+  userId    Int
+  book      Book @relation(fields: [bookId], references: [id])
+  bookId    Int
+  createdAt DateTime @default(now())
+
+  @@id([userId, bookId])
 }

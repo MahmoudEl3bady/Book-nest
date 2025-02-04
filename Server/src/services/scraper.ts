@@ -1,15 +1,28 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 import logger from "../utils/logger.js";
 import prisma from "../config/prismaClient.js";
+import { Response } from "express";
 
-export async function scrapeBooks(req, res) {
-  const browser: Browser = await puppeteer.launch({ headless: "new" });
+interface Book {
+  title: string;
+  rating: string;
+  book_URL: string;
+  description: string;
+  image_url: string;
+}
+
+export async function scrapeBooks(_, res: Response): Promise<void> {
+  const browser: Browser = await puppeteer.launch({ headless: true });
   const page: Page = await browser.newPage();
 
   try {
     let currentPage = 1;
     let hasNextPage = true;
-    const allBooks = [];
+    const allBooks: Book[] = [];
+    const dbBooks = await prisma.book.findMany({
+      select: { book_URL: true },
+    });
+    const dbBooksUrlSet = new Set<string>(dbBooks.map((book) => book.book_URL));
 
     while (hasNextPage) {
       const pageUrl = `https://books.toscrape.com/catalogue/page-${currentPage}.html`;
@@ -22,28 +35,37 @@ export async function scrapeBooks(req, res) {
 
       // Process each book
       for (const bookUrl of bookLinks) {
+        if (dbBooksUrlSet.has(bookUrl)) {
+          continue; // Skip if book already exists in the database
+        }
         await page.goto(bookUrl);
 
-        const bookData = await page.evaluate(() => {
-          const title = document.querySelector(".product_main h1").innerText;
-          const price = parseFloat(
-            document.querySelector(".price_color").innerText.replace("£", "")
-          );
-          const rating = document.querySelector(".star-rating")?.classList[1];
+        const bookData: Book = await page.evaluate(() => {
+          const title = document.querySelector(
+            ".product_main h1"
+          ) as HTMLElement | null;
+          const titleText = title?.innerText || "";
+          const rating =
+            document.querySelector(".star-rating")?.classList[1] || "";
           const description = document.querySelector(
             "#product_description + p"
-          )?.innerText;
+          ) as HTMLElement;
+
+          const descriptionText = description?.innerText || "";
+
+          const imageURL = document.querySelector(
+            ".item.active img"
+          ) as HTMLImageElement | null;
+          const imageSrc = imageURL?.src || "";
 
           return {
-            title,
-            author: "", // Default value since author is not scraped
-            price,
+            title: titleText,
             rating: String(
               ["One", "Two", "Three", "Four", "Five"].indexOf(rating) + 1
-            ), // Convert to string
-            book_URL: window.location.href, // Rename product_url to book_URL
-            description,
-            image_url: document.querySelector(".item.active img")?.src,
+            ),
+            book_URL: window.location.href,
+            description: descriptionText,
+            image_url: imageSrc,
           };
         });
 
@@ -53,16 +75,14 @@ export async function scrapeBooks(req, res) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
 
-      // Check if there is a next page
       const nextButton = await page.$(".pager .next a");
       if (!nextButton) {
-        hasNextPage = false; // No more pages
+        hasNextPage = false;
       } else {
-        currentPage++; // Move to the next page
+        currentPage++;
       }
     }
 
-    // Save all books to the database
     await prisma.book.createMany({
       data: allBooks,
     });

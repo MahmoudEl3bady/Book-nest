@@ -5,10 +5,10 @@ import morgan from "morgan";
 import { authLimiter } from "./middleware/rateLimiter.js";
 import authRoutes from "./routes/auth.js";
 import logger from "./utils/logger.js";
-import { scrapeBooks } from "./services/scraper.js";
-import bookRouter from "./routes/books.js";
+import bookRouter from "./routes/books";
 import { authenticateToken } from "./middleware/auth.js";
 import favoriteRouter from "./routes/favorites.js";
+import "./services/scheduler";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,7 +26,6 @@ app.use("/api/auth", authLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRouter);
 app.use("/api/favorites", authenticateToken, favoriteRouter);
-app.get("/api/scrape-books", authenticateToken, scrapeBooks);
 
 // Auth Testing
 app.get("/api/test", authenticateToken, (_, res) => {

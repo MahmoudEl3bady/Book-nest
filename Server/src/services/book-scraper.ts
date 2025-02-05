@@ -1,9 +1,8 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 import logger from "../utils/logger.js";
 import prisma from "../config/prismaClient.js";
-import { Response } from "express";
 
-interface Book {
+export interface Book {
   title: string;
   rating: string;
   book_URL: string;
@@ -11,7 +10,7 @@ interface Book {
   image_url: string;
 }
 
-export async function scrapeBooks(_, res: Response): Promise<void> {
+export async function scrapeBooks(): Promise<Book[]> {
   const browser: Browser = await puppeteer.launch({ headless: true });
   const page: Page = await browser.newPage();
 
@@ -86,14 +85,11 @@ export async function scrapeBooks(_, res: Response): Promise<void> {
     await prisma.book.createMany({
       data: allBooks,
     });
-
     logger.info(`Successfully scraped ${allBooks.length} books`);
-    res
-      .status(201)
-      .json({ message: "Books scraped successfully", books: allBooks });
+    return allBooks;
   } catch (error) {
     logger.error("Error during scraping:", error);
-    res.status(500).json({ message: "Error during scraping", error });
+    return [];
   } finally {
     await browser.close();
   }

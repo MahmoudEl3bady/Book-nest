@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { Book, scrapeBooks } from "./book-scraper";
+import { Book, scrapeBooks } from "./booksScraper";
 import prisma from "../config/prismaClient";
 import logger from "../utils/logger";
 

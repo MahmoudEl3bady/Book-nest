@@ -3,7 +3,7 @@ import {
   getUserFavorites,
   addFavorite,
   removeFavorite,
-} from "../controllers/favorites.js";
+} from "../controllers/favoritesController.js";
 import { authenticateToken } from "../middleware/auth.js";
 
 const router = express.Router();

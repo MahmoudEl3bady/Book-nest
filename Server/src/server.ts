@@ -3,11 +3,11 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { authLimiter } from "./middleware/rateLimiter.js";
-import authRoutes from "./routes/auth.js";
+import authRoutes from "./routes/authRoutes.js";
 import logger from "./utils/logger.js";
-import bookRouter from "./routes/books";
+import bookRouter from "./routes/booksRoutes.js";
 import { authenticateToken } from "./middleware/auth.js";
-import favoriteRouter from "./routes/favorites.js";
+import favoriteRouter from "./routes/favoritesRoutes.js";
 import "./services/scheduler";
 import setupSwagger from "./swagger";
 

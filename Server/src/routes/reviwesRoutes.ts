@@ -4,7 +4,7 @@ import {
   deleteReview,
   createReview,
   updateReview,
-} from "../controllers/reviews";
+} from "../controllers/reviewsController";
 import { authenticateToken } from "@/middleware/auth";
 
 const router = express.Router();

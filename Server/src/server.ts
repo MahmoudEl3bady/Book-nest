@@ -9,6 +9,7 @@ import bookRouter from "./routes/books";
 import { authenticateToken } from "./middleware/auth.js";
 import favoriteRouter from "./routes/favorites.js";
 import "./services/scheduler";
+import setupSwagger from "./swagger";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,8 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("combined"));
+
+setupSwagger(app);
 
 // Rate Limiting for auth routes
 app.use("/api/auth", authLimiter);

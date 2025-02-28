@@ -1,5 +1,10 @@
-import Image from "next/image";
+import Header from "@/components/Header";
 
 export default function Home() {
-  return <h1>Book scrapper</h1>;
+  return (
+    <div>
+      <Header />
+      <h1>Home</h1>
+    </div>
+  );
 }

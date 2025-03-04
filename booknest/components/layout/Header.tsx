@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Menu, Search, User, BookOpen, Home, LogOut } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useState } from "react";
+import { Menu, Search, User, BookOpen, Home, LogOut } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "Home", href: "/", icon: Home },
   { name: "Explore", href: "/explore", icon: Search },
   { name: "My Books", href: "/my-books", icon: BookOpen },
-]
+];
 
 export default function Header() {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const pathname = usePathname()
-  const isLoggedIn = true // This would come from your auth state
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const pathname = usePathname();
+  const isLoggedIn = true; // This would come from your auth state
 
   return (
     <header className="border-b bg-background sticky top-0 z-10">
@@ -44,7 +44,9 @@ export default function Header() {
               href={item.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
-                pathname === item.href ? "text-primary" : "text-muted-foreground",
+                pathname === item.href
+                  ? "text-primary"
+                  : "text-muted-foreground"
               )}
             >
               {item.name}
@@ -55,13 +57,22 @@ export default function Header() {
         {/* Search Bar (Desktop) */}
         <div className="hidden md:flex relative w-full max-w-sm mx-4">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search for books, authors..." className="pl-8 w-full" />
+          <Input
+            type="search"
+            placeholder="Search for books, authors..."
+            className="pl-8 w-full"
+          />
         </div>
 
         {/* User Actions */}
         <div className="flex items-center gap-2">
           {/* Search Toggle (Mobile) */}
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+          >
             <Search className="h-5 w-5" />
           </Button>
 
@@ -69,7 +80,11 @@ export default function Header() {
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full hidden md:flex">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full hidden md:flex"
+                >
                   <User className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -111,26 +126,31 @@ export default function Header() {
               <div className="flex flex-col gap-6 mt-6">
                 <nav className="flex flex-col gap-4">
                   {navItems.map((item) => {
-                    const Icon = item.icon
+                    const Icon = item.icon;
                     return (
                       <Link
                         key={item.name}
                         href={item.href}
                         className={cn(
                           "flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary",
-                          pathname === item.href ? "text-primary" : "text-muted-foreground",
+                          pathname === item.href
+                            ? "text-primary"
+                            : "text-muted-foreground"
                         )}
                       >
                         <Icon className="h-5 w-5" />
                         {item.name}
                       </Link>
-                    )
+                    );
                   })}
                 </nav>
                 <div className="border-t pt-4">
                   {isLoggedIn ? (
                     <>
-                      <Link href="/profile" className="flex items-center gap-2 text-lg font-medium mb-4">
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-2 text-lg font-medium mb-4"
+                      >
                         <User className="h-5 w-5" />
                         Profile
                       </Link>
@@ -163,11 +183,14 @@ export default function Header() {
         <div className="md:hidden p-2 border-t">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input type="search" placeholder="Search for books, authors..." className="pl-8 w-full" />
+            <Input
+              type="search"
+              placeholder="Search for books, authors..."
+              className="pl-8 w-full"
+            />
           </div>
         </div>
       )}
     </header>
-  )
+  );
 }
-

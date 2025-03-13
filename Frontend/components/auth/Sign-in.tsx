@@ -2,10 +2,9 @@
 
 import type React from "react";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { BookOpen, Mail, Lock, User, UserPlus } from "lucide-react";
+import { BookOpen, Mail, Lock, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,19 +16,42 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useForm } from "react-hook-form";
+import {
+  loginFormData,
+  LoginFormSchema,
+} from "@/lib/schema/registerFormSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function SignUp() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+export default function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginFormData),
+  });
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
+  let error = false;
+  const onSubmit = async (data: LoginFormSchema) => {
+    try {
+      const response = await fetch("http://localhost:4000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        const user = await response.json();
+        localStorage.setItem("token", JSON.stringify(user.token));
+        router.push("/");
+      }
+    } catch (err) {
+      console.log("Error logging in!", err);
+    } finally {
+    }
   };
 
   return (
@@ -40,10 +62,10 @@ export default function SignUp() {
             <BookOpen className="h-10 w-10 text-primary" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            Join BookNest
+            Welcome back to BookNest
           </CardTitle>
           <CardDescription className="text-center">
-            Create an account to start your reading journey
+            Enter your credentials to access your reading journey
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -52,61 +74,47 @@ export default function SignUp() {
               {error}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  className="pl-10"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
+                  {...register("email")}
                   id="email"
                   type="email"
                   placeholder="you@example.com"
                   className="pl-10"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-primary hover:text-amber-700"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
+                  {...register("password")}
                   id="password"
                   type="password"
                   className="pl-10"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
-                Password must be at least 8 characters long
-              </p>
             </div>
 
             <Button
               type="submit"
               className="w-full bg-primary hover:bg-blue-800"
-              disabled={isLoading}
+              disabled={isSubmitting}
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <span className="flex items-center justify-center">
                   <svg
                     className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
@@ -128,12 +136,12 @@ export default function SignUp() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Creating account...
+                  Signing in...
                 </span>
               ) : (
                 <span className="flex items-center justify-center">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Create Account
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign In
                 </span>
               )}
             </Button>
@@ -141,12 +149,12 @@ export default function SignUp() {
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link
-              href="/auth/sign-in"
+              href="/auth/sign-up"
               className="font-medium text-primary hover:text-amber-700"
             >
-              Sign in
+              Sign up
             </Link>
           </p>
         </CardFooter>

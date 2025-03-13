@@ -56,3 +56,37 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ error: `Error during login: ${error.message}` });
   }
 };
+
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      res.status(401).json({ message: "No token provided" });
+      return;
+    }
+
+    try {
+      // Verify the token is valid before proceeding
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+
+      // In a production environment, you would:
+      // 1. Add the token to a blacklist in Redis/database
+      // await blacklistToken(token);
+
+      res.status(200).json({
+        success: true,
+        message: "Logged out successfully",
+      });
+    } catch (jwtError) {
+      res.status(401).json({
+        success: false,
+        message: "Invalid token",
+      });
+    }
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};

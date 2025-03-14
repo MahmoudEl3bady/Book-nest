@@ -1,9 +1,11 @@
-import express from "express";
+import express, { Request, RequestHandler, Response } from "express";
 import {
   getBooks,
   getBookById,
   searchBooks,
 } from "../controllers/booksController.js";
+import { scrapeBooks } from "@/services/booksScraper.js";
+import logger from "@/utils/logger.js";
 
 const router = express.Router();
 
@@ -106,5 +108,42 @@ router.get("/search", searchBooks);
  *         description: Internal server error.
  */
 router.get("/:id", getBookById);
+
+/**
+ * @openapi
+ * /api/books/scrape:
+ *   get:
+ *     summary: Scrape books from external source
+ *     description: Initiates the scraping process to fetch new books from books.toscrape.com
+ *     responses:
+ *       200:
+ *         description: Scraping process completed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 count:
+ *                   type: number
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/scrape", async (_, res: Response) => {
+  try {
+    const books = await scrapeBooks();
+    res.status(200).json({
+      message: "Books scraped successfully",
+      count: books.length,
+    });
+  } catch (error) {
+    logger.error("Error in scrape route:", error);
+    res.status(500).json({
+      error: "Failed to scrape books",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+});
 
 export default router;

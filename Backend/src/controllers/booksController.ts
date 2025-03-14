@@ -18,10 +18,10 @@ export const getBooks = async (req: Request, res: Response): Promise<void> => {
 };
 export const getBookById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = parseInt(req.params.id, 10);
     const book = await prisma.book.findUnique({
       where: {
-        id: parseInt(id),
+        id,
       },
     });
     if (!book) {

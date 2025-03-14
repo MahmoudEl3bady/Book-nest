@@ -1,0 +1,23 @@
+{
+  "name": "book-nest",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:backend": "cd Backend && pnpm install && pnpm build",
+    "build:frontend": "cd Frontend && pnpm install && pnpm build",
+    "build": "pnpm install && npm-run-all --parallel build:backend build:frontend",
+    "dev:backend": "cd Backend && pnpm dev",
+    "dev:frontend": "cd Frontend && pnpm dev",
+    "dev": "concurrently \"pnpm dev:backend\" \"pnpm dev:frontend\"",
+    "start:backend": "cd Backend && pnpm start",
+    "start:frontend": "cd Frontend && pnpm start",
+    "start": "npm-run-all --parallel start:backend start:frontend",
+    "lint": "prettier . --write",
+    "lint:check": "prettier . --check"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.0"
+  }
+}

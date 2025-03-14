@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "nodemon",
-    "migrate": "node src/database/migrate.js"
+    "dev": "nodemon"
   },
   "prisma": {
     "schema": "db/prisma/schema.prisma"

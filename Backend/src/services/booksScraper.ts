@@ -10,86 +10,120 @@ export interface Book {
   image_url: string;
 }
 
+const SCRAPE_DELAY = 1000; // 1 second delay between requests
+const BASE_URL = "https://books.toscrape.com/catalogue";
+
+async function extractBookData(page: Page): Promise<Book> {
+  return await page.evaluate(() => {
+    const title =
+      document.querySelector(".product_main h1")?.textContent?.trim() || "";
+    const rating = document.querySelector(".star-rating")?.classList[1] || "";
+    const description =
+      document.querySelector("#product_description + p")?.textContent?.trim() ||
+      "";
+    const imageURL =
+      (document.querySelector(".item.active img") as HTMLImageElement)?.src ||
+      "";
+
+    const ratingMap: { [key: string]: string } = {
+      One: "1",
+      Two: "2",
+      Three: "3",
+      Four: "4",
+      Five: "5",
+    };
+
+    return {
+      title,
+      rating: ratingMap[rating] || "0",
+      book_URL: window.location.href,
+      description,
+      image_url: imageURL,
+    };
+  });
+}
+
+/**
+ * Scrapes books from books.toscrape.com and saves them to the database.
+ * @returns The scraped books.
+ */
+
 export async function scrapeBooks(): Promise<Book[]> {
-  const browser: Browser = await puppeteer.launch({ headless: true });
+  const browser: Browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page: Page = await browser.newPage();
+  const allBooks: Book[] = [];
 
   try {
-    let currentPage = 1;
-    let hasNextPage = true;
-    const allBooks: Book[] = [];
+    // Set a reasonable timeout
+    await page.setDefaultNavigationTimeout(30000);
+
+    // Get existing books from DB to avoid duplicates
     const dbBooks = await prisma.book.findMany({
       select: { book_URL: true },
     });
-    const dbBooksUrlSet = new Set<string>(dbBooks.map((book) => book.book_URL));
+    const dbBooksUrlSet = new Set(dbBooks.map((book) => book.book_URL));
+
+    let currentPage = 1;
+    let hasNextPage = true;
 
     while (hasNextPage) {
-      const pageUrl = `https://books.toscrape.com/catalogue/page-${currentPage}.html`;
-      await page.goto(pageUrl);
+      logger.info(`Scraping page ${currentPage}`);
+      const pageUrl = `${BASE_URL}/page-${currentPage}.html`;
 
-      // Get all book links from the current page
+      await page.goto(pageUrl, { waitUntil: "networkidle0" });
+
       const bookLinks = await page.$$eval(".product_pod h3 a", (links) =>
         links.map((link) => link.href)
       );
 
-      // Process each book
-      for (const bookUrl of bookLinks) {
-        if (dbBooksUrlSet.has(bookUrl)) {
-          continue; // Skip if book already exists in the database
-        }
-        await page.goto(bookUrl);
+      // Process books in batches to improve performance
+      const batchSize = 5;
+      for (let i = 0; i < bookLinks.length; i += batchSize) {
+        const batch = bookLinks.slice(i, i + batchSize);
+        const batchPromises = batch.map(async (bookUrl) => {
+          if (dbBooksUrlSet.has(bookUrl)) {
+            return null;
+          }
 
-        const bookData: Book = await page.evaluate(() => {
-          const title = document.querySelector(
-            ".product_main h1"
-          ) as HTMLElement | null;
-          const titleText = title?.innerText || "";
-          const rating =
-            document.querySelector(".star-rating")?.classList[1] || "";
-          const description = document.querySelector(
-            "#product_description + p"
-          ) as HTMLElement;
-
-          const descriptionText = description?.innerText || "";
-
-          const imageURL = document.querySelector(
-            ".item.active img"
-          ) as HTMLImageElement | null;
-          const imageSrc = imageURL?.src || "";
-
-          return {
-            title: titleText,
-            rating: String(
-              ["One", "Two", "Three", "Four", "Five"].indexOf(rating) + 1
-            ),
-            book_URL: window.location.href,
-            description: descriptionText,
-            image_url: imageSrc,
-          };
+          try {
+            await page.goto(bookUrl, { waitUntil: "networkidle0" });
+            const bookData = await extractBookData(page);
+            return bookData;
+          } catch (error) {
+            logger.error(`Error scraping book ${bookUrl}:`, error);
+            return null;
+          }
         });
 
-        allBooks.push(bookData);
+        const batchResults = await Promise.all(batchPromises);
+        allBooks.push(
+          ...batchResults.filter((book): book is Book => book !== null)
+        );
 
-        // Rate limiting
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, SCRAPE_DELAY));
       }
 
       const nextButton = await page.$(".pager .next a");
-      if (!nextButton) {
-        hasNextPage = false;
-      } else {
-        currentPage++;
-      }
+      hasNextPage = !!nextButton;
+      currentPage++;
     }
 
-    await prisma.book.createMany({
-      data: allBooks,
-    });
-    logger.info(`Successfully scraped ${allBooks.length} books`);
+    // Save books in batches
+    if (allBooks.length > 0) {
+      await prisma.book.createMany({
+        data: allBooks,
+        skipDuplicates: true as never,
+      });
+    }
+
+    logger.info(`Successfully scraped ${allBooks.length} new books`);
     return allBooks;
   } catch (error) {
-    logger.error("Error during scraping:", error);
-    return [];
+    logger.error("Error during scraping process:", error);
+    throw error;
   } finally {
     await browser.close();
   }

@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { ChevronLeft, ChevronRight, Star } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function FeaturedBooks() {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // This would come from your API
   const featuredBooks = [
@@ -39,24 +39,33 @@ export default function FeaturedBooks() {
         "A memoir about a young girl who, kept out of school, leaves her survivalist family and goes on to earn a PhD from Cambridge University.",
       rating: 4.6,
     },
-  ]
+  ];
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === featuredBooks.length - 1 ? 0 : prevIndex + 1))
-  }
+    setCurrentIndex((prevIndex) =>
+      prevIndex === featuredBooks.length - 1 ? 0 : prevIndex + 1,
+    );
+  };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? featuredBooks.length - 1 : prevIndex - 1))
-  }
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? featuredBooks.length - 1 : prevIndex - 1,
+    );
+  };
 
-  const book = featuredBooks[currentIndex]
+  const book = featuredBooks[currentIndex];
 
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0">
         <div className="grid md:grid-cols-2 gap-6">
           <div className="relative aspect-[3/4] md:aspect-auto">
-            <Image src={book.coverImage || "/placeholder.svg"} alt={book.title} fill className="object-cover" />
+            <Image
+              src={book.coverImage || "/placeholder.svg"}
+              alt={book.title}
+              fill
+              className="object-cover"
+            />
           </div>
           <div className="p-6 flex flex-col justify-center">
             <div className="flex items-center justify-between mb-2">
@@ -65,10 +74,20 @@ export default function FeaturedBooks() {
                 <span className="font-medium">{book.rating}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={prevSlide}>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 rounded-full"
+                  onClick={prevSlide}
+                >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={nextSlide}>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 rounded-full"
+                  onClick={nextSlide}
+                >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -85,6 +104,5 @@ export default function FeaturedBooks() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

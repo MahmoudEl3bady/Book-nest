@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { BookOpen, Edit, Settings, User } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import BookCard from "@/components/books/BookCard"
-import ReviewList from "@/components/books/ReviewList"
+import { useState } from "react";
+import Link from "next/link";
+import { BookOpen, Edit, Settings, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BookCard from "@/components/books/BookCard";
+import ReviewList from "@/components/books/ReviewList";
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState("shelves")
+  const [activeTab, setActiveTab] = useState("shelves");
 
   // This would come from your API
   const user = {
@@ -26,7 +26,7 @@ export default function ProfilePage() {
     booksWantToRead: 34,
     following: 156,
     followers: 142,
-  }
+  };
 
   const shelves = [
     { id: 1, name: "Currently Reading", count: 3 },
@@ -35,7 +35,7 @@ export default function ProfilePage() {
     { id: 4, name: "Favorites", count: 12 },
     { id: 5, name: "Science Fiction", count: 23 },
     { id: 6, name: "Mystery", count: 18 },
-  ]
+  ];
 
   return (
     <div className="space-y-8">
@@ -109,10 +109,18 @@ export default function ProfilePage() {
         <TabsContent value="shelves" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {shelves.map((shelf) => (
-              <Link key={shelf.id} href={`/profile/shelves/${shelf.id}`} className="group">
+              <Link
+                key={shelf.id}
+                href={`/profile/shelves/${shelf.id}`}
+                className="group"
+              >
                 <div className="border rounded-lg p-4 h-full hover:border-primary transition-colors">
-                  <h3 className="font-medium group-hover:text-primary">{shelf.name}</h3>
-                  <p className="text-sm text-muted-foreground">{shelf.count} books</p>
+                  <h3 className="font-medium group-hover:text-primary">
+                    {shelf.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {shelf.count} books
+                  </p>
                 </div>
               </Link>
             ))}
@@ -122,7 +130,10 @@ export default function ProfilePage() {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">Currently Reading</h2>
-              <Link href="/profile/shelves/1" className="text-primary hover:underline text-sm">
+              <Link
+                href="/profile/shelves/1"
+                className="text-primary hover:underline text-sm"
+              >
                 View all
               </Link>
             </div>
@@ -137,7 +148,10 @@ export default function ProfilePage() {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">Recently Read</h2>
-              <Link href="/profile/shelves/3" className="text-primary hover:underline text-sm">
+              <Link
+                href="/profile/shelves/3"
+                className="text-primary hover:underline text-sm"
+              >
                 View all
               </Link>
             </div>
@@ -173,7 +187,10 @@ export default function ProfilePage() {
                         {i % 3 === 0 ? (
                           <>
                             added{" "}
-                            <Link href={`/books/${i}`} className="text-primary hover:underline">
+                            <Link
+                              href={`/books/${i}`}
+                              className="text-primary hover:underline"
+                            >
                               Book Title {i}
                             </Link>{" "}
                             to <span className="font-medium">Want to Read</span>
@@ -181,7 +198,10 @@ export default function ProfilePage() {
                         ) : i % 3 === 1 ? (
                           <>
                             rated{" "}
-                            <Link href={`/books/${i}`} className="text-primary hover:underline">
+                            <Link
+                              href={`/books/${i}`}
+                              className="text-primary hover:underline"
+                            >
                               Book Title {i}
                             </Link>{" "}
                             {i} stars
@@ -189,13 +209,18 @@ export default function ProfilePage() {
                         ) : (
                           <>
                             wrote a review for{" "}
-                            <Link href={`/books/${i}`} className="text-primary hover:underline">
+                            <Link
+                              href={`/books/${i}`}
+                              className="text-primary hover:underline"
+                            >
                               Book Title {i}
                             </Link>
                           </>
                         )}
                       </p>
-                      <p className="text-sm text-muted-foreground">{i} days ago</p>
+                      <p className="text-sm text-muted-foreground">
+                        {i} days ago
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -205,6 +230,5 @@ export default function ProfilePage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

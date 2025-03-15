@@ -100,7 +100,7 @@ export default function Header() {
                 "text-sm font-medium transition-colors hover:text-primary",
                 pathname === item.href
                   ? "text-primary"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               {item.name}
@@ -194,7 +194,7 @@ export default function Header() {
                           "flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary",
                           pathname === item.href
                             ? "text-primary"
-                            : "text-muted-foreground"
+                            : "text-muted-foreground",
                         )}
                       >
                         <Icon className="h-5 w-5" />

@@ -12,6 +12,8 @@
     "start:backend": "cd Backend && pnpm start",
     "start:frontend": "cd Frontend && pnpm start",
     "start": "npm-run-all --parallel start:backend start:frontend",
+    "db:migrate": "cd Backend && pnpm prisma migrate dev",
+    "db:studio": "cd Backend && pnpm prisma studio",
     "lint": "prettier . --write",
     "lint:check": "prettier . --check"
   },

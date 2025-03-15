@@ -2,7 +2,7 @@
 export const createUser = async (
   name: string,
   email: string,
-  password: string
+  password: string,
 ) => {
   try {
     const response = await fetch("localhost:4000/api/auth/signup", {

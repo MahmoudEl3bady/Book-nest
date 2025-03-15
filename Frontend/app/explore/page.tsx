@@ -1,13 +1,27 @@
-import { BookOpen, Filter, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Separator } from "@/components/ui/separator"
-import BookCard from "@/components/books/BookCard"
+"use server";
+import { BookOpen, Filter, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
+import BookCard from "@/components/books/BookCard";
 
-export default function ExplorePage() {
+export default async function ExplorePage() {
   // This would come from your API
   const genres = [
     "Fiction",
@@ -22,7 +36,24 @@ export default function ExplorePage() {
     "Self-Help",
     "Business",
     "Poetry",
-  ]
+  ];
+
+  interface Book {
+    title: string;
+    rating: string;
+    book_URL: string;
+    description: string;
+    image_url: string;
+  }
+
+  const getBooks = async () => {
+    const response = await fetch(`http://localhost:4000/api/books`);
+    const data = await response.json();
+    return data.books;
+  };
+  const books = await getBooks();
+
+  console.log(books);
 
   return (
     <div className="space-y-6">
@@ -31,7 +62,11 @@ export default function ExplorePage() {
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input type="search" placeholder="Search by title, author, or ISBN..." className="pl-8 w-full" />
+            <Input
+              type="search"
+              placeholder="Search by title, author, or ISBN..."
+              className="pl-8 w-full"
+            />
           </div>
           <Select defaultValue="relevance">
             <SelectTrigger className="w-[180px]">
@@ -54,7 +89,9 @@ export default function ExplorePage() {
             <SheetContent side="left">
               <SheetHeader>
                 <SheetTitle>Filters</SheetTitle>
-                <SheetDescription>Narrow down your search results</SheetDescription>
+                <SheetDescription>
+                  Narrow down your search results
+                </SheetDescription>
               </SheetHeader>
               <div className="py-4 space-y-6">
                 <div>
@@ -146,16 +183,18 @@ export default function ExplorePage() {
               <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No books found</h3>
               <p className="text-muted-foreground max-w-md">
-                We couldn't find any books matching your search criteria. Try adjusting your filters or search terms.
+                We couldn't find any books matching your search criteria. Try
+                adjusting your filters or search terms.
               </p>
             </div>
           )}
 
           {/* Results grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Array.from({ length: 24 }).map((_, i) => (
-              <BookCard key={i} id={i + 1} />
-            ))}
+            {books.length > 0 &&
+              books.map((book: Book) => (
+                <BookCard book={book} key={book.title} />
+              ))}
           </div>
 
           {/* Pagination */}
@@ -178,7 +217,11 @@ export default function ExplorePage() {
                   <path d="m15 18-6-6 6-6" />
                 </svg>
               </Button>
-              <Button variant="outline" size="sm" className="bg-primary text-primary-foreground">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-primary text-primary-foreground"
+              >
                 1
               </Button>
               <Button variant="outline" size="sm">
@@ -215,6 +258,5 @@ export default function ExplorePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

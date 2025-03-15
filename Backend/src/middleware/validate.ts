@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 export const validate = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): any => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -4,7 +4,7 @@ import prisma from "../config/prismaClient";
 
 export const createReview = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const { bookId } = req.params;
   const { comment, rating } = req.body;

@@ -1,21 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Star, ThumbsUp, MessageSquare } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState } from "react";
+import Link from "next/link";
+import { Star, ThumbsUp, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ReviewListProps {
-  bookId: number
+  bookId: number;
 }
 
 export default function ReviewList({ bookId }: ReviewListProps) {
-  const [rating, setRating] = useState<number | null>(null)
-  const [reviewText, setReviewText] = useState("")
-  const [filter, setFilter] = useState("recent")
+  const [rating, setRating] = useState<number | null>(null);
+  const [reviewText, setReviewText] = useState("");
+  const [filter, setFilter] = useState("recent");
 
   // This would come from your API
   const reviews = [
@@ -64,15 +70,15 @@ export default function ReviewList({ bookId }: ReviewListProps) {
       likes: 7,
       comments: 2,
     },
-  ]
+  ];
 
   const handleSubmitReview = () => {
     // This would submit the review to your API
-    console.log({ bookId, rating, reviewText })
+    console.log({ bookId, rating, reviewText });
     // Reset form
-    setRating(null)
-    setReviewText("")
-  }
+    setRating(null);
+    setReviewText("");
+  };
 
   return (
     <div className="space-y-6">
@@ -81,7 +87,12 @@ export default function ReviewList({ bookId }: ReviewListProps) {
         <h3 className="font-medium">Write a Review</h3>
         <div className="flex items-center gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
-            <button key={star} type="button" onClick={() => setRating(star)} className="focus:outline-none">
+            <button
+              key={star}
+              type="button"
+              onClick={() => setRating(star)}
+              className="focus:outline-none"
+            >
               <Star
                 className={`h-6 w-6 ${star <= (rating || 0) ? "fill-primary text-primary" : "text-muted-foreground"}`}
               />
@@ -95,7 +106,10 @@ export default function ReviewList({ bookId }: ReviewListProps) {
           onChange={(e) => setReviewText(e.target.value)}
           rows={4}
         />
-        <Button onClick={handleSubmitReview} disabled={!rating || !reviewText.trim()}>
+        <Button
+          onClick={handleSubmitReview}
+          disabled={!rating || !reviewText.trim()}
+        >
           Submit Review
         </Button>
       </div>
@@ -123,11 +137,17 @@ export default function ReviewList({ bookId }: ReviewListProps) {
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center gap-2">
                 <Avatar>
-                  <AvatarImage src={review.user.avatar} alt={review.user.name} />
+                  <AvatarImage
+                    src={review.user.avatar}
+                    alt={review.user.name}
+                  />
                   <AvatarFallback>{review.user.initials}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <Link href={`/users/${review.user.id}`} className="font-medium hover:underline">
+                  <Link
+                    href={`/users/${review.user.id}`}
+                    className="font-medium hover:underline"
+                  >
                     {review.user.name}
                   </Link>
                   <p className="text-xs text-muted-foreground">{review.date}</p>
@@ -144,11 +164,19 @@ export default function ReviewList({ bookId }: ReviewListProps) {
             </div>
             <p className="mb-4">{review.content}</p>
             <div className="flex gap-4">
-              <Button variant="ghost" size="sm" className="text-muted-foreground">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+              >
                 <ThumbsUp className="mr-1 h-4 w-4" />
                 {review.likes}
               </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+              >
                 <MessageSquare className="mr-1 h-4 w-4" />
                 {review.comments}
               </Button>
@@ -157,6 +185,5 @@ export default function ReviewList({ bookId }: ReviewListProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
-

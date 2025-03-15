@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { BookOpen, Check, ChevronDown, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { BookOpen, Check, ChevronDown, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -17,19 +17,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface AddToShelfButtonProps {
-  bookId: number
+  bookId: number;
 }
 
 export default function AddToShelfButton({ bookId }: AddToShelfButtonProps) {
-  const [isInLibrary, setIsInLibrary] = useState(false)
-  const [selectedShelf, setSelectedShelf] = useState<string | null>(null)
-  const [isCreateShelfOpen, setIsCreateShelfOpen] = useState(false)
-  const [newShelfName, setNewShelfName] = useState("")
+  const [isInLibrary, setIsInLibrary] = useState(false);
+  const [selectedShelf, setSelectedShelf] = useState<string | null>(null);
+  const [isCreateShelfOpen, setIsCreateShelfOpen] = useState(false);
+  const [newShelfName, setNewShelfName] = useState("");
 
   // This would come from your API
   const shelves = [
@@ -37,22 +37,22 @@ export default function AddToShelfButton({ bookId }: AddToShelfButtonProps) {
     { id: 2, name: "Currently Reading" },
     { id: 3, name: "Read" },
     { id: 4, name: "Favorites" },
-  ]
+  ];
 
   const handleAddToShelf = (shelfName: string) => {
     // This would add the book to the shelf in your API
-    console.log(`Adding book ${bookId} to shelf: ${shelfName}`)
-    setSelectedShelf(shelfName)
-    setIsInLibrary(true)
-  }
+    console.log(`Adding book ${bookId} to shelf: ${shelfName}`);
+    setSelectedShelf(shelfName);
+    setIsInLibrary(true);
+  };
 
   const handleCreateShelf = () => {
     // This would create a new shelf in your API
-    console.log(`Creating new shelf: ${newShelfName}`)
-    setNewShelfName("")
-    setIsCreateShelfOpen(false)
+    console.log(`Creating new shelf: ${newShelfName}`);
+    setNewShelfName("");
+    setIsCreateShelfOpen(false);
     // After creating, you would add the book to this shelf
-  }
+  };
 
   return (
     <>
@@ -69,13 +69,22 @@ export default function AddToShelfButton({ bookId }: AddToShelfButtonProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-56">
             {shelves.map((shelf) => (
-              <DropdownMenuItem key={shelf.id} onClick={() => handleAddToShelf(shelf.name)} className="cursor-pointer">
-                {shelf.name === selectedShelf && <Check className="mr-2 h-4 w-4" />}
+              <DropdownMenuItem
+                key={shelf.id}
+                onClick={() => handleAddToShelf(shelf.name)}
+                className="cursor-pointer"
+              >
+                {shelf.name === selectedShelf && (
+                  <Check className="mr-2 h-4 w-4" />
+                )}
                 {shelf.name}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setIsCreateShelfOpen(true)} className="cursor-pointer">
+            <DropdownMenuItem
+              onClick={() => setIsCreateShelfOpen(true)}
+              className="cursor-pointer"
+            >
               <Plus className="mr-2 h-4 w-4" />
               Create New Shelf
             </DropdownMenuItem>
@@ -101,12 +110,19 @@ export default function AddToShelfButton({ bookId }: AddToShelfButtonProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-56">
             {shelves.map((shelf) => (
-              <DropdownMenuItem key={shelf.id} onClick={() => handleAddToShelf(shelf.name)} className="cursor-pointer">
+              <DropdownMenuItem
+                key={shelf.id}
+                onClick={() => handleAddToShelf(shelf.name)}
+                className="cursor-pointer"
+              >
                 {shelf.name}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setIsCreateShelfOpen(true)} className="cursor-pointer">
+            <DropdownMenuItem
+              onClick={() => setIsCreateShelfOpen(true)}
+              className="cursor-pointer"
+            >
               <Plus className="mr-2 h-4 w-4" />
               Create New Shelf
             </DropdownMenuItem>
@@ -118,7 +134,9 @@ export default function AddToShelfButton({ bookId }: AddToShelfButtonProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create New Shelf</DialogTitle>
-            <DialogDescription>Create a new shelf to organize your books.</DialogDescription>
+            <DialogDescription>
+              Create a new shelf to organize your books.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
@@ -132,7 +150,10 @@ export default function AddToShelfButton({ bookId }: AddToShelfButtonProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateShelfOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsCreateShelfOpen(false)}
+            >
               Cancel
             </Button>
             <Button onClick={handleCreateShelf} disabled={!newShelfName.trim()}>
@@ -142,6 +163,5 @@ export default function AddToShelfButton({ bookId }: AddToShelfButtonProps) {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }
-

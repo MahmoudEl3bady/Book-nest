@@ -18,10 +18,11 @@ export const getBooks = async (req: Request, res: Response): Promise<void> => {
 };
 export const getBookById = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const bookId = parseInt(req.params.id, 10);
+    console.log("bookId", bookId);
     const book = await prisma.book.findUnique({
       where: {
-        id,
+        id: bookId,
       },
     });
     if (!book) {
@@ -36,7 +37,7 @@ export const getBookById = async (req: Request, res: Response) => {
 
 export const searchBooks = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { title, author } = req.query as {
@@ -44,7 +45,6 @@ export const searchBooks = async (
       author?: string;
     };
 
-    // Build dynamic WHERE clause
     const whereClause: any = {
       OR: [],
     };

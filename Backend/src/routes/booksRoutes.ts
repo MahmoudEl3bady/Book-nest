@@ -1,4 +1,4 @@
-import express, { Request, RequestHandler, Response } from "express";
+import express, { Response } from "express";
 import {
   getBooks,
   getBookById,
@@ -81,36 +81,6 @@ router.get("/search", searchBooks);
 
 /**
  * @openapi
- * /api/books/{id}:
- *   get:
- *     summary: Get a book by ID
- *     description: Retrieve details of a single book by its unique ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: The unique identifier of the book.
- *     responses:
- *       200:
- *         description: Details of the requested book.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 book:
- *                   $ref: '#/components/schemas/Book'
- *       404:
- *         description: Book not found.
- *       500:
- *         description: Internal server error.
- */
-router.get("/:id", getBookById);
-
-/**
- * @openapi
  * /api/books/scrape:
  *   get:
  *     summary: Scrape books from external source
@@ -146,4 +116,33 @@ router.get("/scrape", async (_, res: Response) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/books/{id}:
+ *   get:
+ *     summary: Get a book by ID
+ *     description: Retrieve details of a single book by its unique ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The unique identifier of the book.
+ *     responses:
+ *       200:
+ *         description: Details of the requested book.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 book:
+ *                   $ref: '#/components/schemas/Book'
+ *       404:
+ *         description: Book not found.
+ *       500:
+ *         description: Internal server error.
+ */
+router.get("/:id", getBookById);
 export default router;

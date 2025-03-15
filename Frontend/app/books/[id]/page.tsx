@@ -1,25 +1,25 @@
-import Image from "next/image"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { Heart, Share2, Star } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import BookCard from "@/components/books/BookCard"
-import ReviewList from "@/components/books/ReviewList"
-import AddToShelfButton from "@/components/books/AddToShelfButton"
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Heart, Share2, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import BookCard from "@/components/books/BookCard";
+import ReviewList from "@/components/books/ReviewList";
+import AddToShelfButton from "@/components/books/AddToShelfButton";
 
 interface BookPageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 export default function BookPage({ params }: BookPageProps) {
-  const id = Number.parseInt(params.id)
+  const id = Number.parseInt(params.id);
 
   if (isNaN(id)) {
-    return notFound()
+    return notFound();
   }
 
   // This would come from your API
@@ -38,7 +38,7 @@ export default function BookPage({ params }: BookPageProps) {
     genres: ["Fiction", "Mystery", "Thriller"],
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  }
+  };
 
   return (
     <div className="space-y-8">
@@ -57,7 +57,9 @@ export default function BookPage({ params }: BookPageProps) {
             </Link>
           </li>
           <li>/</li>
-          <li className="text-primary font-medium truncate max-w-[200px]">{book.title}</li>
+          <li className="text-primary font-medium truncate max-w-[200px]">
+            {book.title}
+          </li>
         </ol>
       </nav>
 
@@ -109,9 +111,13 @@ export default function BookPage({ params }: BookPageProps) {
                 />
               ))}
               <span className="ml-2 font-medium">{book.rating}</span>
-              <span className="text-muted-foreground ml-1">({book.ratingsCount})</span>
+              <span className="text-muted-foreground ml-1">
+                ({book.ratingsCount})
+              </span>
             </div>
-            <div className="text-muted-foreground">{book.reviewsCount} reviews</div>
+            <div className="text-muted-foreground">
+              {book.reviewsCount} reviews
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-6">
@@ -167,6 +173,5 @@ export default function BookPage({ params }: BookPageProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

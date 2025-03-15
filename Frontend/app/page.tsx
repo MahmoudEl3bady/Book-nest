@@ -65,7 +65,8 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <BookCard key={i} id={i} />
+            // <BookCard key={i} id={i} />
+            <div key={i}>{i}</div>
           ))}
         </div>
       </section>

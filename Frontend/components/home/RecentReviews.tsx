@@ -1,8 +1,8 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Star } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import Image from "next/image";
+import Link from "next/link";
+import { Star } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function RecentReviews() {
   // This would come from your API
@@ -41,7 +41,8 @@ export default function RecentReviews() {
         coverImage: "/placeholder.svg?height=100&width=70&text=Book",
       },
       rating: 4,
-      content: "A thrilling sci-fi adventure with a perfect blend of humor and science. Couldn't put it down!",
+      content:
+        "A thrilling sci-fi adventure with a perfect blend of humor and science. Couldn't put it down!",
       date: "3 days ago",
     },
     {
@@ -63,7 +64,7 @@ export default function RecentReviews() {
         "A beautiful and thought-provoking exploration of what it means to be human, told through the eyes of an artificial friend.",
       date: "5 days ago",
     },
-  ]
+  ];
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -73,11 +74,17 @@ export default function RecentReviews() {
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
                 <Avatar>
-                  <AvatarImage src={review.user.avatar} alt={review.user.name} />
+                  <AvatarImage
+                    src={review.user.avatar}
+                    alt={review.user.name}
+                  />
                   <AvatarFallback>{review.user.initials}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <Link href={`/users/${review.user.id}`} className="font-medium hover:underline">
+                  <Link
+                    href={`/users/${review.user.id}`}
+                    className="font-medium hover:underline"
+                  >
                     {review.user.name}
                   </Link>
                   <p className="text-xs text-muted-foreground">{review.date}</p>
@@ -106,10 +113,15 @@ export default function RecentReviews() {
                 </div>
               </Link>
               <div>
-                <Link href={`/books/${review.book.id}`} className="font-medium hover:underline">
+                <Link
+                  href={`/books/${review.book.id}`}
+                  className="font-medium hover:underline"
+                >
                   {review.book.title}
                 </Link>
-                <p className="text-sm text-muted-foreground mb-2">by {review.book.author}</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  by {review.book.author}
+                </p>
                 <p className="text-sm line-clamp-3">{review.content}</p>
               </div>
             </div>
@@ -117,6 +129,5 @@ export default function RecentReviews() {
         </Card>
       ))}
     </div>
-  )
+  );
 }
-

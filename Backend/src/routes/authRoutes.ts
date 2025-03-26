@@ -1,5 +1,12 @@
 import express from "express";
-import { register, login, logout } from "../controllers/authController.js";
+import {
+  register,
+  login,
+  logout,
+  deleteAccount,
+  updateProfile,
+} from "../controllers/authController.js";
+import { authenticateToken } from "@/middleware/auth.js";
 
 const router = express.Router();
 
@@ -71,5 +78,10 @@ router.post("/register", register);
  */
 router.post("/login", login);
 
-router.post("/logout", logout);
+router.post("/logout", authenticateToken, logout);
+
+router.put("/update", authenticateToken, updateProfile);
+
+router.delete("/delete-account", authenticateToken, deleteAccount);
+
 export default router;

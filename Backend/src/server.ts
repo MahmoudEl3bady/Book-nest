@@ -26,7 +26,7 @@ setupSwagger(app);
 app.use("/api/auth", authLimiter);
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/api/user", authRoutes);
 app.use("/api/books", bookRouter);
 app.use("/api/favorites", authenticateToken, favoriteRouter);
 

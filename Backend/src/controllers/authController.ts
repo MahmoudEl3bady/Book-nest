@@ -33,7 +33,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
     res.status(201).json({ message: "User created successfully" });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error?.message });
   }
 };
 
@@ -46,7 +46,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       },
     });
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new Error("User already exists");
+      throw new Error("Incorrect email and password!");
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
       expiresIn: JWT_EXPIRES_IN,
@@ -59,34 +59,70 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 export const logout = async (req: Request, res: Response): Promise<void> => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      res.status(401).json({ message: "No token provided" });
-      return;
-    }
-
-    try {
-      // Verify the token is valid before proceeding
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-
-      // In a production environment, you would:
-      // 1. Add the token to a blacklist in Redis/database
-      // await blacklistToken(token);
-
-      res.status(200).json({
-        success: true,
-        message: "Logged out successfully",
-      });
-    } catch (jwtError) {
-      res.status(401).json({
-        success: false,
-        message: "Invalid token",
-      });
-    }
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
   } catch (error: any) {
     res.status(500).json({
       success: false,
       error: error.message,
     });
+  }
+};
+
+export const deleteAccount = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      throw new Error("User doesn't exist");
+    }
+    await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+    res
+      .status(200)
+      .json({ success: true, message: "Account deleted successfully!" });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error: error?.message,
+    });
+  }
+};
+
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const updatedData = req.body;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      throw new Error("User doesn't exist");
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: updatedData,
+    });
+    console.log(updatedUser);
+    res.status(200).json({
+      message: "Your profile updated successfully!",
+      data: updatedUser,
+    });
+  } catch (error: any) {
+    console.error(error?.message);
+    res.status(400).json({ error: error.message });
   }
 };

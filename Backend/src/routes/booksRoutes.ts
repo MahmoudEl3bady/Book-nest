@@ -6,6 +6,7 @@ import {
 } from "../controllers/booksController.js";
 import { scrapeBooks } from "@/services/booksScraper.js";
 import logger from "@/utils/logger.js";
+import { populateDatabase } from "@/services/googleBooks.js";
 
 const router = express.Router();
 
@@ -144,5 +145,12 @@ router.get("/scrape", async (_, res: Response) => {
  *       500:
  *         description: Internal server error.
  */
+
+router.get("/google-books", async (req, res) => {
+  const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+  const books = await populateDatabase(apiKey || "");
+  res.status(200).json(books);
+});
+
 router.get("/:id", getBookById);
 export default router;

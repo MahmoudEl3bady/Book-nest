@@ -4,7 +4,7 @@ import prisma from "../config/prismaClient.js";
 
 export interface Book {
   title: string;
-  rating: string;
+  rating: number;
   book_URL: string;
   description: string;
   image_url: string;
@@ -42,7 +42,7 @@ export async function scrapeBooks(): Promise<Book[]> {
 
       // Get all book links on the current page
       const bookLinks = await page.$$eval(".product_pod h3 a", (links) =>
-        links.map((link) => link.href),
+        links.map((link) => link.href)
       );
 
       // Process each book
@@ -60,8 +60,7 @@ export async function scrapeBooks(): Promise<Book[]> {
             const title =
               document.querySelector(".product_main h1")?.textContent?.trim() ||
               "";
-            const rating =
-              document.querySelector(".star-rating")?.classList[1] || "";
+            const rating = 0;
             const description =
               document
                 .querySelector("#product_description + p")
@@ -69,18 +68,9 @@ export async function scrapeBooks(): Promise<Book[]> {
             const imageURL =
               (document.querySelector(".item.active img") as HTMLImageElement)
                 ?.src || "";
-
-            const ratingMap: { [key: string]: string } = {
-              One: "1",
-              Two: "2",
-              Three: "3",
-              Four: "4",
-              Five: "5",
-            };
-
             return {
               title,
-              rating: ratingMap[rating] || "0",
+              rating: rating,
               book_URL: window.location.href,
               description,
               image_url: imageURL,

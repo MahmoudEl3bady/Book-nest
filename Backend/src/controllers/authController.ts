@@ -67,6 +67,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         },
       ];
 
+      // Create all shelves within the same transaction
       for (const shelf of defaultShelves) {
         await tx.bookshelf.create({
           data: shelf,

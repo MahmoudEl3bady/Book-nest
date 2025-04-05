@@ -12,7 +12,13 @@ export const getUserFavorites = async (req: Request, res: Response) => {
     // Fetch the user with their favorites from the database
     const userWithFavorites = await db.user.findUnique({
       where: { id: user.id },
-      include: { favorites: true },
+      include: {
+        favorites: {
+          include: {
+            book: true,
+          },
+        },
+      },
     });
 
     if (!userWithFavorites) {
@@ -20,7 +26,12 @@ export const getUserFavorites = async (req: Request, res: Response) => {
       return;
     }
 
-    res.status(200).json({ favorites: userWithFavorites.favorites });
+    // Extract the books from the favorites relationship
+    const favoriteBooks = userWithFavorites.favorites.map(
+      (favorite) => favorite.book
+    );
+
+    res.status(200).json({ favorites: favoriteBooks });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
@@ -36,7 +47,7 @@ export const addFavorite = async (req: Request, res: Response) => {
 
     // Check if the book exists
     const book = await db.book.findUnique({
-      where: { id: bookId },
+      where: { id: parseInt(bookId) },
     });
 
     if (!book) {
@@ -44,18 +55,46 @@ export const addFavorite = async (req: Request, res: Response) => {
       return;
     }
 
-    // Add the book to the user's favorites
-    const updatedUser = await db.user.update({
-      where: { id: user.id },
-      data: {
-        favorites: {
-          connect: { userId: user.id, bookId: bookId },
+    // Check if already a favorite
+    const existingFavorite = await db.userFavorite.findUnique({
+      where: {
+        userId_bookId: {
+          userId: user.id,
+          bookId: parseInt(bookId),
         },
       },
-      include: { favorites: true },
     });
 
-    res.status(201).json(updatedUser.favorites);
+    if (existingFavorite) {
+      res.status(400).json({ error: "Book is already in favorites" });
+      return;
+    }
+
+    // Add the book to the user's favorites
+    const favorite = await db.userFavorite.create({
+      data: {
+        user: { connect: { id: user.id } },
+        book: { connect: { id: parseInt(bookId) } },
+      },
+    });
+
+    // Get all favorites with book details to return
+    const userWithFavorites = await db.user.findUnique({
+      where: { id: user.id },
+      include: {
+        favorites: {
+          include: {
+            book: true,
+          },
+        },
+      },
+    });
+
+    // Extract the books from the favorites relationship
+    const favoriteBooks =
+      userWithFavorites?.favorites.map((favorite) => favorite.book) || [];
+
+    res.status(201).json(favoriteBooks);
   } catch (error) {
     console.error("Error adding favorite:", error);
     res.status(500).json({ error: (error as Error).message });
@@ -72,7 +111,7 @@ export const removeFavorite = async (req: Request, res: Response) => {
 
     // Check if the book exists
     const book = await db.book.findUnique({
-      where: { id: bookId },
+      where: { id: parseInt(bookId) },
     });
 
     if (!book) {
@@ -81,17 +120,32 @@ export const removeFavorite = async (req: Request, res: Response) => {
     }
 
     // Remove the book from the user's favorites
-    const updatedUser = await db.user.update({
-      where: { id: user.id },
-      data: {
-        favorites: {
-          disconnect: { id: bookId },
+    await db.userFavorite.delete({
+      where: {
+        userId_bookId: {
+          userId: user.id,
+          bookId: parseInt(bookId),
         },
       },
-      include: { favorites: true },
     });
 
-    res.status(200).json(updatedUser.favorites);
+    // Get updated favorites list with book details
+    const userWithFavorites = await db.user.findUnique({
+      where: { id: user.id },
+      include: {
+        favorites: {
+          include: {
+            book: true,
+          },
+        },
+      },
+    });
+
+    // Extract the books from the favorites relationship
+    const favoriteBooks =
+      userWithFavorites?.favorites.map((favorite) => favorite.book) || [];
+
+    res.status(200).json(favoriteBooks);
   } catch (error) {
     console.error("Error removing favorite:", error);
     res.status(500).json({ error: (error as Error).message });

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { JWT_EXPIRES_IN } from "../constants";
 import prisma from "../config/prismaClient";
+import { Bookshelf } from "@prisma/client";
 
 interface RegisterRequestBody {
   name: string;
@@ -15,22 +16,66 @@ interface LoginRequestBody {
   password: string;
 }
 
+// Default shelf names used for system defaults
+export const DEFAULT_SHELF_NAMES = {
+  CURRENTLY_READING: "Currently-reading",
+  READ: "Read",
+  TO_READ: "To-read",
+};
+
 export const register = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password }: RegisterRequestBody = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (user) {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
       throw new Error("User already exists");
     }
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Use a transaction to ensure user and shelves are created atomically
+    const user = await prisma.$transaction(async (tx) => {
+      // Create user and get the result in a single operation
+      const newUser = await tx.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+        },
+      });
+
+      // Create default shelves using the user ID from the creation result
+      const defaultShelves = [
+        {
+          name: DEFAULT_SHELF_NAMES.CURRENTLY_READING,
+          description: "List of the currently reading books",
+          isPrivate: false,
+          userId: newUser.id,
+        },
+        {
+          name: DEFAULT_SHELF_NAMES.READ,
+          description: "List of the read books",
+          isPrivate: false,
+          userId: newUser.id,
+        },
+        {
+          name: DEFAULT_SHELF_NAMES.TO_READ,
+          description: "List of the user's books to read",
+          isPrivate: false,
+          userId: newUser.id,
+        },
+      ];
+
+      for (const shelf of defaultShelves) {
+        await tx.bookshelf.create({
+          data: shelf,
+        });
+      }
+
+      return newUser;
     });
+
     res.status(201).json({ message: "User created successfully" });
   } catch (error: any) {
     res.status(500).json({ error: error?.message });
@@ -57,7 +102,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const logout = async (req: Request, res: Response): Promise<void> => {
+export const logout = async (_: Request, res: Response): Promise<void> => {
   try {
     res.status(200).json({
       success: true,

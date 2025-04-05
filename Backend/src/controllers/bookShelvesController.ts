@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "@/config/prismaClient";
+import { DEFAULT_SHELF_NAMES } from "./authController";
 
 export const addNewShelf = async (
   req: Request,
@@ -172,6 +173,14 @@ export const deleteShelf = async (
 
     if (shelf.userId !== userId) {
       return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // Prevent deletion of default shelves
+    const defaultShelfNames = Object.values(DEFAULT_SHELF_NAMES);
+    if (defaultShelfNames.includes(shelf.name)) {
+      return res.status(400).json({
+        error: "Cannot delete default system shelves",
+      });
     }
 
     await prisma.bookshelf.delete({

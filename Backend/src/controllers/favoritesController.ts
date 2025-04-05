@@ -49,7 +49,7 @@ export const addFavorite = async (req: Request, res: Response) => {
       where: { id: user.id },
       data: {
         favorites: {
-          connect: { id: bookId },
+          connect: { userId: user.id, bookId: bookId },
         },
       },
       include: { favorites: true },

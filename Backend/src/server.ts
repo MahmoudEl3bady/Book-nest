@@ -10,6 +10,7 @@ import { authenticateToken } from "./middleware/auth.js";
 import favoriteRouter from "./routes/favoritesRoutes.js";
 import "./services/scheduler";
 import setupSwagger from "./swagger";
+import bookShelvesRouter from "./routes/bookShelves.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -29,6 +30,7 @@ app.use("/api/auth", authLimiter);
 app.use("/api/user", authRoutes);
 app.use("/api/books", bookRouter);
 app.use("/api/favorites", authenticateToken, favoriteRouter);
+app.use("/api/shelves", authenticateToken, bookShelvesRouter);
 
 // Auth Testing
 app.get("/api/test", authenticateToken, (_, res) => {

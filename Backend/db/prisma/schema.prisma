@@ -12,6 +12,8 @@ model User {
   name        String
   email       String        @unique
   password    String
+  resetToken  String?       @unique
+  resetTokenExpires DateTime?
   reviews     Review[]
   bookshelves Bookshelf[]
   bookStatus  BookStatus[]

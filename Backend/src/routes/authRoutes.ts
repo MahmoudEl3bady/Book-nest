@@ -5,8 +5,11 @@ import {
   logout,
   deleteAccount,
   updateProfile,
+  forgetPassword,
+  resetPassword,
 } from "../controllers/authController.js";
 import { authenticateToken } from "@/middleware/auth.js";
+import { authLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -83,5 +86,8 @@ router.post("/logout", authenticateToken, logout);
 router.put("/update", authenticateToken, updateProfile);
 
 router.delete("/delete-account", authenticateToken, deleteAccount);
+
+router.post("/forgot-password", authLimiter, forgetPassword);
+router.post("/reset-password", authLimiter, resetPassword);
 
 export default router;

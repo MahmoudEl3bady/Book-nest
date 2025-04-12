@@ -1,107 +1,210 @@
-# Book Scraper Platform
+# BookNest: Advanced Book Management Platform
 
-The Book Scraper API is a web scraping service that fetches book data from an online store using **Node.js**, **Express.js**, **Puppeteer**, and **SQLite**. The **client-side** is a Next.js-based web application that interacts with the API, providing a user-friendly interface to browse and manage scraped book data.
+BookNest is a sophisticated full-stack application that leverages web scraping to provide a comprehensive book management experience. Built with modern technologies, it offers an intuitive interface for discovering, organizing, and interacting with book data.
 
-## Features
+## 🚀 Features
 
-### Server Features
+### Core Features
 
-- Web scraping with Puppeteer
-- JWT Authentication
-- Book management with SQLite
-- Favorites system
-- Paginated API responses
-- Search functionality
-- Review system
-- Rate limiting & security headers
+- **Intelligent Web Scraping**: Automatically fetches and updates book data from online sources
+- **Google Books API Integration**: Enhanced book data with cover images, descriptions, and metadata
+- **Comprehensive Book Management**: Organize your literary collection with ease
+- **User Authentication System**: Secure JWT-based authentication with role management
+- **Personalized Experience**: Favorites system, custom bookshelves, and reading history
+- **Smart Search & Filtering**: Find books by title, author, genre, or custom criteria
+- **Community Engagement**: Reviews, ratings, and social sharing capabilities
+- **Responsive Design**: Seamless experience across all devices
 
-### Client Features
+### Server Capabilities
 
-- Modern UI with Tailwind CSS
-- User authentication flows
-- Book browsing interface
-- Favorites management
-- Responsive design
-- Mobile-first approach
+- High-performance web scraping with Puppeteer
+- RESTful API with Express.js
+- Prisma ORM with SQLite (upgradable to PostgreSQL for production)
+- Comprehensive error handling and logging
+- Rate limiting and security measures
+- Scheduled data updates with node-cron
+- Email notifications via Nodemailer
+- Swagger documentation
+- Helmet security implementation
 
-## Tech Stack
+### Client Experience
 
-**Server**: Node.js, Express, Prisma, SQLite, Puppeteer, JWT  
- **Client**: Next.js, TypeScript, Tailwind CSS
+- Modern UI built with Next.js and TypeScript
+- Radix UI component library
+- Tailwind CSS for responsive styling
+- Form validation with React Hook Form and Zod
+- Efficient state management
+- SSR for optimal performance
+- Dark/light theme support
+- Accessibility-focused design
+
+## 🛠️ Tech Stack
+
+### Backend
+
+- **Runtime**: Node.js
+- **Framework**: Express.js, TypeScript
+- **Database**: SQLite (dev), PostgreSQL (production-ready)
+- **ORM**: Prisma
+- **Authentication**: JWT, bcrypt
+- **Scraping**: Puppeteer
+- **Validation**: Zod, Express Validator
+- **Documentation**: Swagger
+- **Logging**: Winston
+- **Security**: Helmet, rate limiting, CORS
+
+### Frontend
+
+- **Framework**: Next.js 15+
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Radix UI
+- **Form Management**: React Hook Form
+- **Data Validation**: Zod
+- **Authentication**: JWT with HTTP-only cookies
+- **Charts & Data Viz**: Recharts
+- **Date Management**: date-fns
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- npm 9+
-- SQLite3
+- Node.js 18+ (LTS recommended)
+- npm 9+ or pnpm 8+
+- SQLite3 (development)
 
-### Server Setup
+### Project Setup
 
-1.  **Clone the repository**
+1. **Clone the repository**
 
-    ```
-    git clone https://github.com/yourusername/book-scraper.git
-    cd book-scraper/server
-    ```
+   ```bash
+   git clone https://github.com/MahmoudEl3bady/book-nest.git
+   cd book-nest
+   ```
 
-2.  **Install dependencies**
+2. **Install root dependencies**
 
-    ```
-    npm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
-3.  **Set up environment variables** (create a `.env` file and add your secrets)
+3. **Initialize the database**
 
-    ```
-    PORT=3000
-    JWT_SECRET=your_secret_key
-    DATABASE_URL=file:./db/database.sqlite
-    ```
+   ```bash
+   pnpm db:migrate
+   ```
 
-4.  **Initialize database**
+   You can also open Prisma Studio to manage your database:
 
-    ```
-    npx prisma migrate dev
-    ```
+   ```bash
+   pnpm db:studio
+   ```
 
-5.  **Run the server**
+4. **Start development servers**
 
-    ```
-    npm run dev
-    ```
+   Run both frontend and backend concurrently:
 
-6.  **Access API documentation** at `http://localhost:3000/docs`
+   ```bash
+   pnpm dev
+   ```
 
----
+   Or run them separately:
 
-### Client Setup
+   ```bash
+   # Backend only
+   pnpm dev:server
 
-1.  **Navigate to the client directory**
+   # Frontend only
+   pnpm dev:client
+   ```
 
-    ```
-    cd book-scraper/client
-    ```
+### Environment Setup
 
-2.  **Install dependencies**
+#### Backend (.env)
 
-    ```
-    npm install
-    ```
+Create a `.env` file in the `Backend` directory:
 
-3.  **Set up environment variables** (`.env`)
+```
+# Server Configuration
+PORT=3001
+NODE_ENV=development
 
-    ```
-    NEXT_PUBLIC_API_URL=http://localhost:3000/api
-    ```
+# Database
+DATABASE_URL=file:./db/database.sqlite
 
-4.  **Run the development server**
+# Authentication
+JWT_SECRET=your_secure_jwt_secret
+JWT_EXPIRES_IN=7d
 
-    ```
-    npm run dev
-    ```
+# API Configuration
+RATE_LIMIT_WINDOW=15
+RATE_LIMIT_MAX=100
 
-5.  **Visit the app** at `http://localhost:3000`
+# Email (optional)
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your_email@example.com
+SMTP_PASS=your_password
+EMAIL_FROM=noreply@booknest.com
+```
 
----
+#### Frontend (.env.local)
+
+Create a `.env.local` file in the `Frontend` directory:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+## 🚀 Deployment
+
+### Production Build
+
+Build both frontend and backend:
+
+```bash
+pnpm build
+```
+
+Or build them separately:
+
+```bash
+# Backend only
+pnpm build:server
+
+# Frontend only
+pnpm build:client
+```
+
+### Running in Production
+
+Start both services:
+
+```bash
+pnpm start
+```
+
+Or start them separately:
+
+```bash
+# Backend only
+pnpm start:server
+
+# Frontend only
+pnpm start:client
+```
+
+### Code Quality
+
+Format all code with Prettier:
+
+```bash
+pnpm lint
+```
+
+Check code formatting without making changes:
+
+```bash
+pnpm lint:check
+```

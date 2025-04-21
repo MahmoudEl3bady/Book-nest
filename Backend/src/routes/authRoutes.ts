@@ -3,7 +3,6 @@ import {
   register,
   login,
   logout,
-  deleteAccount,
   updateProfile,
   forgetPassword,
   resetPassword,
@@ -84,8 +83,6 @@ router.post("/login", login);
 router.post("/logout", authenticateToken, logout);
 
 router.put("/update", authenticateToken, updateProfile);
-
-router.delete("/delete-account", authenticateToken, deleteAccount);
 
 router.post("/forgot-password", authLimiter, forgetPassword);
 router.post("/reset-password", authLimiter, resetPassword);

@@ -16,7 +16,7 @@
     "schema": "db/prisma/schema.prisma"
   },
   "dependencies": {
-    "@prisma/client": "^6.3.1",
+    "@prisma/client": "^6.6.0",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.17",
     "bcryptjs": "^2.4.3",
@@ -56,7 +56,7 @@
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
     "nodemon": "^3.1.0",
-    "prisma": "^6.3.1",
+    "prisma": "^6.6.0",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.15",
     "tsconfig-paths": "^4.2.0",

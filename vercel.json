@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Backend/src/server.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "Backend/src/server.ts"
+    }
+  ],
+  "env": {
+    "DATABASE_URL": "file:./db/database.sqlite"
+  }
+}

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { User } from "@prisma/client";
 import db from "../config/prismaClient.js";
 
 /**
@@ -7,7 +6,7 @@ import db from "../config/prismaClient.js";
  */
 export const getUserFavorites = async (req: Request, res: Response) => {
   try {
-    const user: User = req.user!;
+    const user: any = req.user!;
 
     // Fetch the user with their favorites from the database
     const userWithFavorites = await db.user.findUnique({
@@ -42,7 +41,7 @@ export const getUserFavorites = async (req: Request, res: Response) => {
  */
 export const addFavorite = async (req: Request, res: Response) => {
   try {
-    const user: User = req.user!;
+    const user: any = req.user!;
     const { bookId } = req.body;
 
     // Check if the book exists
@@ -106,7 +105,7 @@ export const addFavorite = async (req: Request, res: Response) => {
  */
 export const removeFavorite = async (req: Request, res: Response) => {
   try {
-    const user: User = req.user!;
+    const user: any = req.user!;
     const { bookId } = req.body;
 
     // Check if the book exists

@@ -19,6 +19,6 @@
       "@/*": ["./*"] // Map `@/` to `src/` for easier imports
     }
   },
-  "include": ["src/**/*"], // Include all files in the `src` directory
+  "include": ["src/**/*", "src/config/prismaClient.ts"], // Include all files in the `src` directory
   "exclude": ["node_modules", "dist"] // Exclude `node_modules` and `dist` directories
 }

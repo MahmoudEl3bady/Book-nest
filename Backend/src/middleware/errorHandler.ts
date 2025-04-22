@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import logger from "../utils/logger";
+import logger from "../utils/logger.js";
 
 export const errorHandler = (
   err: Error,
-  req: Request,
+  _: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   logger.error(err.stack);
 
@@ -16,4 +16,5 @@ export const errorHandler = (
         ? "Internal server error"
         : err.message,
   });
+  next();
 };

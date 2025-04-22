@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { JWT_EXPIRES_IN } from "../constants";
-import prisma from "../config/prismaClient";
-import { sendPasswordResetEmail } from "../services/emailService";
-import logger from "../utils/logger";
+import { JWT_EXPIRES_IN } from "../constants/index.js";
+import prisma from "../config/prismaClient.js";
+import { sendPasswordResetEmail } from "../services/emailService.js";
+import logger from "../utils/logger.js";
 
 interface RegisterRequestBody {
   name: string;
@@ -37,7 +37,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Use a transaction to ensure user and shelves are created atomically
-    const user = await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       // Create user and get the result in a single operation
       const newUser = await tx.user.create({
         data: {

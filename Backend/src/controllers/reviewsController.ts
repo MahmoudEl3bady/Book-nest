@@ -1,10 +1,10 @@
 // controllers/reviews.ts
 import { Request, Response } from "express";
-import prisma from "../config/prismaClient";
+import prisma from "../config/prismaClient.js";
 
 export const createReview = async (
   req: Request,
-  res: Response,
+  res: Response
 ): Promise<void> => {
   const { bookId } = req.params;
   const { comment, rating } = req.body;
@@ -32,7 +32,7 @@ export const createReview = async (
     });
 
     res.status(201).json(review);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to create review" });
   }
 };
@@ -49,7 +49,7 @@ export const updateReview = async (req: Request, res: Response) => {
     });
 
     res.json(review);
-  } catch (error) {
+  } catch {
     res.status(404).json({ error: "Review not found or unauthorized" });
   }
 };
@@ -63,7 +63,7 @@ export const deleteReview = async (req: Request, res: Response) => {
       where: { id: Number(reviewId), userId: Number(userId) },
     });
     res.status(204).send();
-  } catch (error) {
+  } catch {
     res.status(404).json({ error: "Review not found or unauthorized" });
   }
 };
@@ -77,7 +77,7 @@ export const getBookReviews = async (req: Request, res: Response) => {
       include: { user: { select: { id: true, name: true } } }, // Include user details
     });
     res.json(reviews);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch reviews" });
   }
 };

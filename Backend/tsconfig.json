@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022", // Target ES2022 for modern JavaScript features
-    "module": "ESNext", // Use ESNext modules (supports dynamic imports)
-    "moduleResolution": "node", // Use Node.js module resolution
+    "module": "NodeNext", // Use NodeNext modules (supports dynamic imports)
+    "moduleResolution": "NodeNext", // Use NodeNext module resolution
     "outDir": "./dist", // Output compiled files to the `dist` directory
     "rootDir": "./src", // Set root directory to `src` (not "./")
     "strict": true, // Enable all strict type-checking options
@@ -14,9 +14,9 @@
     "noImplicitAny": false, // Allow implicit `any` types (set to `true` later for stricter checks)
     "allowJs": true, // Allow JavaScript files during transition
     "resolveJsonModule": true, // Allow importing JSON files
-    "baseUrl": "./", // Base directory for module resolution
+    "baseUrl": "./src", // Base directory for module resolution
     "paths": {
-      "@/*": ["./src/*"] // Map `@/` to `src/` for easier imports
+      "@/*": ["./*"] // Map `@/` to `src/` for easier imports
     }
   },
   "include": ["src/**/*"], // Include all files in the `src` directory

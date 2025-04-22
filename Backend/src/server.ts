@@ -8,9 +8,9 @@ import logger from "./utils/logger.js";
 import bookRouter from "./routes/booksRoutes.js";
 import { authenticateToken } from "./middleware/auth.js";
 import favoriteRouter from "./routes/favoritesRoutes.js";
-import "./services/scheduler";
-import setupSwagger from "./swagger";
+import setupSwagger from "./swagger.js";
 import bookShelvesRouter from "./routes/bookShelves.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -40,6 +40,9 @@ app.get("/api/test", authenticateToken, (_, res) => {
 app.get("/healthz", (_, res) => {
   res.json({ message: "Welcome to the Book Scraper API" });
 });
+
+app.use(errorHandler);
+
 app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
 });

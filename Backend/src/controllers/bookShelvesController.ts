@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import prisma from "@/config/prismaClient";
-import { DEFAULT_SHELF_NAMES } from "./authController";
+import prisma from "../config/prismaClient.js";
+import { DEFAULT_SHELF_NAMES } from "./authController.js";
 
 export const addNewShelf = async (
   req: Request,

@@ -22,9 +22,9 @@ const options = {
   },
   // Paths to files containing OpenAPI definitions (adjust paths as needed)
   apis: [
-    "./src/routes/*.ts",
-    "./src/controllers/*.ts",
-    "./src/swaggerComponents.ts",
+    "./src/routes/*.js",
+    "./src/controllers/*.js",
+    "./src/swaggerComponents.js",
   ],
 };
 

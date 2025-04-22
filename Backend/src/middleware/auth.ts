@@ -1,21 +1,21 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
+import logger from "../utils/logger.js";
 
 const JSON_WEB_TOKEN_SECRET: string = process.env.JWT_SECRET || "";
 export function authenticateToken(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): void {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Access denied. No token provided." });
+      res.status(401).json({ message: "Access denied. No token provided." });
+      return;
     }
 
     jwt.verify(token, JSON_WEB_TOKEN_SECRET, (err, user) => {
@@ -29,7 +29,8 @@ export function authenticateToken(
       req.user = user as User;
       next();
     });
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error." });
+  } catch {
+    logger.error("Internal server error");
+    res.status(500).json({ message: "Internal server error." });
   }
 }

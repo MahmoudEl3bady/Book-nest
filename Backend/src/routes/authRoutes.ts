@@ -7,7 +7,7 @@ import {
   forgetPassword,
   resetPassword,
 } from "../controllers/authController.js";
-import { authenticateToken } from "@/middleware/auth.js";
+import { authenticateToken } from "../middleware/auth.js";
 import { authLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();

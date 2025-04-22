@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "@prisma/client";
-import db from "../config/prismaClient";
+import db from "../config/prismaClient.js";
 
 /**
  * Get user favorites
@@ -71,7 +71,7 @@ export const addFavorite = async (req: Request, res: Response) => {
     }
 
     // Add the book to the user's favorites
-    const favorite = await db.userFavorite.create({
+    await db.userFavorite.create({
       data: {
         user: { connect: { id: user.id } },
         book: { connect: { id: parseInt(bookId) } },

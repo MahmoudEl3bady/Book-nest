@@ -5,9 +5,9 @@ import {
   deleteShelf,
   getUserShelves,
   removeBookFromShelf,
-} from "@/controllers/bookShelvesController";
-import { validate } from "@/middleware/validate";
-import { bookshelfValidators } from "@/validators/bookshelf";
+} from "../controllers/bookShelvesController.js";
+import { validate } from "../middleware/validate.js";
+import { bookshelfValidators } from "../validators/bookshelf.js";
 
 const router: Router = express.Router();
 

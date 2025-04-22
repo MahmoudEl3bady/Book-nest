@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import logger from "../utils/logger";
+import logger from "../utils/logger.js";
 
 // Create reusable transporter object using SMTP transport
 const transporter = nodemailer.createTransport({

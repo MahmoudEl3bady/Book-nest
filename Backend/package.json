@@ -10,8 +10,7 @@
     "lint": "eslint src --ext .ts",
     "test": "jest",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "postinstall": "prisma generate"
+    "prisma:migrate": "prisma migrate dev"
   },
   "prisma": {
     "schema": "db/prisma/schema.prisma"

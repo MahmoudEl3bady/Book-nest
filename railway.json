@@ -1,0 +1,11 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "services": [
+    {
+      "name": "Backend",
+      "rootDir": "Backend",
+      "buildCommand": "pnpm install && pnpm run build",
+      "startCommand": "pnpm start"
+    }
+  ]
+}
